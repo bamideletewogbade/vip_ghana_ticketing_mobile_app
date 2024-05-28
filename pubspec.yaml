@@ -34,6 +34,7 @@ flutter:
     - assets/images/splash_screen_lottie.json
     - assets/images/vip_logo_transparent.png
     - assets/images/8.jpg
+    - assets/images/google.png
   
 
   fonts:

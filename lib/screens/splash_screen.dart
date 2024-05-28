@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:vip_bus_ticketing_system/screens/login_screen.dart';
-import 'package:vip_bus_ticketing_system/utils/theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,11 +34,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset('assets/images/splash_screen_lottie.json',
-                width: 300,
-                height: 300,
-                frameRate: FrameRate.max,
-                repeat: true),
+            Lottie.asset(
+              'assets/images/splash_screen_lottie.json',
+              width: 300,
+              height: 300,
+            ),
             SizedBox(height: 10),
             Text(
               'VIP Ghana',

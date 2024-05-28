@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vip_bus_ticketing_system/screens/home_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/signup_screen.dart';
-import 'package:vip_bus_ticketing_system/utils/theme.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -15,16 +15,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: Text('Login'),
-        backgroundColor: Colors.black,
-      ),
+      // appBar: AppBar(
+      //   title: Text('Login'),
+      //   backgroundColor: Colors.black,
+      // ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-            15, 0, 10, 5), // Adjust internal padding if needed
+        padding: const EdgeInsets.fromLTRB(15, 0, 10, 5),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align content to the start
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
@@ -39,12 +37,21 @@ class LoginScreen extends StatelessWidget {
             Center(
               child: SizedBox(
                 child: TextField(
+                  cursorColor: Colors.black,
                   controller: emailController,
                   decoration: const InputDecoration(
                     prefixIconColor: Colors.redAccent,
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email_outlined),
+                    floatingLabelStyle: TextStyle(color: Colors.black),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.redAccent),
+                    ),
                   ),
                 ),
               ),
@@ -52,6 +59,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 10),
             TextField(
               controller: passwordController,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 labelText: 'Password',
                 prefixIconColor: Colors.redAccent,
@@ -59,6 +67,14 @@ class LoginScreen extends StatelessWidget {
                 hintStyle: TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock_outline),
+                floatingLabelStyle: TextStyle(color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(color: Colors.redAccent),
+                ),
               ),
               obscureText: true,
             ),
@@ -67,43 +83,74 @@ class LoginScreen extends StatelessWidget {
               child: Container(
                 width: 350,
                 height: 50,
-                color: Colors.white,
-                child: FilledButton(
-                  onPressed: () {},
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(5.0),
                     backgroundColor:
                         MaterialStateProperty.all(Colors.redAccent),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
                   ),
-                  child: const Text('Enabled'),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 15),
             Divider(
               height: 24.0,
+              thickness: 0.4,
+              color: Colors.black,
             ),
-            // SizedBox(height: 30),
-            RichText(
-              text: TextSpan(
-                text: 'Don\'t have an account? ',
-                style: TextStyle(color: Colors.black),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: 'Sign up',
-                    style: TextStyle(
-                        color: Colors.redAccent, fontWeight: FontWeight.w600),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
-                          ),
-                        );
-                      },
-                  ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Add social login buttons here if needed
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Don\'t have an account? ',
+                  style: TextStyle(color: Colors.black),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Sign up',
+                      style: TextStyle(
+                          color: Colors.redAccent, fontWeight: FontWeight.w600),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignupScreen(),
+                            ),
+                          );
+                        },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
