@@ -10,6 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^5.0.0
+  geolocator: ^8.0.0
+  geocoding: ^2.0.0
+  google_maps_flutter: ^2.0.10
+  permission_handler: ^10.2.0
+  http: 1.1.0
+  firebase_core: ^1.20.0
+  firebase_auth: ^4.1.1
 
 
   cupertino_icons: ^1.0.2
@@ -31,10 +38,11 @@ flutter:
     - assets/images/splash_screen_lottie.json
     - assets/images/1.jpg
     - assets/images/2.jpg
-    - assets/images/splash_screen_lottie.json
     - assets/images/vip_logo_transparent.png
     - assets/images/8.jpg
     - assets/images/google.png
+    - assets/images/pp.png
+    - assets/images/44.jpg
   
 
   fonts:

@@ -14,11 +14,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      // appBar: AppBar(
-      //   title: Text('Login'),
-      //   backgroundColor: Colors.black,
-      // ),
+      backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(15, 0, 10, 5),
         child: Column(
@@ -60,7 +56,7 @@ class LoginScreen extends StatelessWidget {
             TextField(
               controller: passwordController,
               cursorColor: Colors.black,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 prefixIconColor: Colors.redAccent,
                 hintText: '*********',
@@ -80,7 +76,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Center(
-              child: Container(
+              child: SizedBox(
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
@@ -163,5 +159,6 @@ class LoginScreen extends StatelessWidget {
 void main() {
   runApp(MaterialApp(
     home: LoginScreen(),
+    debugShowCheckedModeBanner: false,
   ));
 }

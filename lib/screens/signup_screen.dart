@@ -6,8 +6,8 @@ import 'package:vip_bus_ticketing_system/screens/home_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/login_screen.dart';
 
 class SignupScreen extends StatelessWidget {
-  final TextEditingController firstname = TextEditingController();
-  final TextEditingController lastname = TextEditingController();
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -25,7 +25,6 @@ class SignupScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
             child: Column(
               children: [
-                // Code for Signup screen body
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -40,10 +39,31 @@ class SignupScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextField(
                         cursorColor: Colors.black,
-                        controller: firstname,
+                        controller: firstnameController,
                         decoration: const InputDecoration(
                           prefixIconColor: Colors.redAccent,
                           labelText: 'Firstname',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_outline),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        cursorColor: Colors.black,
+                        controller: lastnameController,
+                        decoration: const InputDecoration(
+                          prefixIconColor: Colors.redAccent,
+                          labelText: 'Lastname',
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person_outline),
                           floatingLabelStyle: TextStyle(color: Colors.black),
@@ -85,6 +105,30 @@ class SignupScreen extends StatelessWidget {
                         cursorColor: Colors.black,
                         decoration: const InputDecoration(
                           labelText: 'Password',
+                          prefixIconColor: Colors.redAccent,
+                          hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.lock_outline),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: confirmPasswordController,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm Password',
                           prefixIconColor: Colors.redAccent,
                           hintText: '*********',
                           hintStyle: TextStyle(color: Colors.grey),
