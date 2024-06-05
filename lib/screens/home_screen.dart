@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
         automaticallyImplyLeading: false,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
@@ -211,37 +211,37 @@ class _HomeContentState extends State<HomeContent> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(left: 0.0, right: 0.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              color: Colors.redAccent,
-              height: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/images/pp.png'),
-                      backgroundColor: Colors.redAccent,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage('assets/images/pp.png'),
+                  backgroundColor: Colors.redAccent,
+                ),
+                SizedBox(width: 15),
+                Text(
+                  'Hi,',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Roboto',
                   ),
-                  SizedBox(width: 15),
-                  Text(
-                    'Hi, $username',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Roboto',
-                    ),
+                ),
+                SizedBox(width: 1),
+                Text(
+                  username,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Roboto',
                   ),
-                  SizedBox(width: 1),
-                ],
-              ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             Text(
@@ -355,8 +355,6 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
             SizedBox(height: 20),
-            _buildMap(),
-            SizedBox(height: 20),
             Text(
               nearestTerminal,
               style: TextStyle(
@@ -367,6 +365,9 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
             SizedBox(height: 20),
+            _buildMap(),
+            SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Popular Routes',
               style: TextStyle(
@@ -376,7 +377,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
             Card(
-              color: Color.fromARGB(255, 216, 202, 202).withOpacity(0.3),
+              color: Colors.blueGrey.withOpacity(0.3),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -414,41 +415,30 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
             Card(
-              color: Color.fromARGB(255, 216, 202, 202).withOpacity(0.3),
+              color: Colors.redAccent.withOpacity(0.1),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Image.asset(
-                        'assets/images/44.jpg',
-                      ),
+                    ListTile(
+                      leading: Icon(Icons.local_offer, color: Colors.redAccent),
+                      title: Text('50% off on your first trip!'),
+                      subtitle: Text('Use code: FIRST50'),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        // Navigate to offer details
+                      },
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ListTile(
-                          leading:
-                              Icon(Icons.local_offer, color: Colors.redAccent),
-                          title: Text('50% off on your first trip!'),
-                          subtitle: Text('Use code: FIRST50'),
-                          trailing: Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            // Navigate to offer details
-                          },
-                        ),
-                        ListTile(
-                          leading:
-                              Icon(Icons.local_offer, color: Colors.redAccent),
-                          title: Text(
-                              '50% off luggage price weighing 2kg and below'),
-                          subtitle: Text('Valid till: 31st May, 2024'),
-                          trailing: Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            // Navigate to offer details
-                          },
-                        ),
-                      ],
+                    ListTile(
+                      leading: Icon(Icons.local_offer, color: Colors.redAccent),
+                      title:
+                          Text('50% off luggage price weighing 2kg and below'),
+                      subtitle: Text('Valid till: 31st May, 2024'),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        // Navigate to offer details
+                      },
                     ),
                   ],
                 ),

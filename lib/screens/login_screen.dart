@@ -21,15 +21,18 @@ class LoginScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: Image.asset(
-                'assets/images/vip_logo_transparent.png',
-                width: 250,
-                height: 250,
-                alignment: Alignment.center,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 50, 40, 10),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/vip_logo_transparent.png',
+                  width: 250,
+                  height: 250,
+                  alignment: Alignment.center,
+                ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             Center(
               child: SizedBox(
                 child: TextField(
