@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "537149165835",
+    "firebase_url": "https://deft-smile-424615-g2-default-rtdb.firebaseio.com",
+    "project_id": "deft-smile-424615-g2",
+    "storage_bucket": "deft-smile-424615-g2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537149165835:android:7e61b992b384e07842920e",
+        "android_client_info": {
+          "package_name": "com.example.vip_bus_ticketing_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn0kGvAqnLhUrsR7F0QxjuKHlv0m22dSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

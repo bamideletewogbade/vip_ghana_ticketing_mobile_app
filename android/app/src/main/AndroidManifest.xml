@@ -9,6 +9,7 @@
         android:label="vip_bus_ticketing_system"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+       
         <activity
             android:name=".MainActivity"
             android:exported="true"
