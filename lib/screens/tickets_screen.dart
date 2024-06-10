@@ -1,5 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'ticket_details_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vip_bus_ticketing_system/models/bus.dart';
+import 'package:vip_bus_ticketing_system/services/bus_service.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({super.key});
@@ -9,179 +13,60 @@ class TicketsScreen extends StatefulWidget {
 }
 
 class _TicketsPageState extends State<TicketsScreen> {
-  // Sample list of tickets (you can replace this with your actual data)
-  final List<Ticket> tickets = [
-    Ticket(
-      ticketNumber: 'ABC123',
-      destination: 'New York',
-      date: 'May 31, 2024',
-      time: '10:00 AM',
-      status: TicketStatus.confirmed,
-    ),
-    Ticket(
-      ticketNumber: 'DEF456',
-      destination: 'Los Angeles',
-      date: 'June 5, 2024',
-      time: '12:00 PM',
-      status: TicketStatus.pending,
-    ),
-    Ticket(
-      ticketNumber: 'GHI789',
-      destination: 'Chicago',
-      date: 'June 10, 2024',
-      time: '3:00 PM',
-      status: TicketStatus.cancelled,
-    ),
-  ];
-
-  // Sample list of recent trips
-  final List<Trip> recentTrips = [
-    Trip(
-      departure_terminal: 'Accra',
-      destination_terminal: 'Sunyani',
-      date: 'April 15, 2024',
-      departure_time: '9:00 PM',
-    ),
-    Trip(
-      departure_terminal: 'Kumasi',
-      destination_terminal: 'Sunyani',
-      date: 'April 15, 2024',
-      departure_time: '9:00 PM',
-    ),
-    Trip(
-      departure_terminal: 'Accra',
-      destination_terminal: 'Cape Coast',
-      date: 'April 15, 2024',
-      departure_time: '9:00 PM',
-    ),
-  ];
+  final BusService _busService = BusService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Tickets'),
+        title: const Text('Available Buses'),
+        backgroundColor: Colors.redAccent,
       ),
-      body: ListView(
-        children: <Widget>[
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: tickets.length,
-            itemBuilder: (context, index) {
-              return _buildTicketCard(tickets[index]);
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Recent Trips',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: recentTrips.length,
-            itemBuilder: (context, index) {
-              return _buildTripCard(recentTrips[index]);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+      body: StreamBuilder<List<Bus>>(
+        stream: _busService.getBuses(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No buses available'));
+          }
 
-  Widget _buildTicketCard(Ticket ticket) {
-    return Card(
-      margin: const EdgeInsets.all(10.0),
-      child: ListTile(
-        title: Text(ticket.destination),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Date: ${ticket.date}'),
-            Text('Time: ${ticket.time}'),
-            Text('Status: ${ticket.statusToString()}'),
-          ],
-        ),
-        trailing: const Icon(Icons.arrow_forward),
-        onTap: () {
-          // Navigate to ticket details screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TicketDetailsScreen(ticket: ticket),
-            ),
+          final buses = snapshot.data!;
+          return ListView.builder(
+            itemCount: buses.length,
+            itemBuilder: (context, index) {
+              final bus = buses[index];
+              return _buildBusCard(bus);
+            },
           );
         },
       ),
     );
   }
 
-  Widget _buildTripCard(Trip trip) {
+  Widget _buildBusCard(Bus bus) {
     return Card(
       margin: const EdgeInsets.all(10.0),
       child: ListTile(
-        title: Text(trip.destination_terminal),
+        title: Text('${bus.departureStation} to ${bus.arrivalStation}'),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Date: ${trip.date}',
-            ),
-            Text(
-              'Departure Terminal: ${trip.departure_time}',
-            ),
+            Text('Departure: ${bus.departureTime}'),
+            Text('Arrival: ${bus.arrivalTime}'),
+            Text('Bus Type: ${bus.busType}'),
+            Text('Price: \$${bus.price.toStringAsFixed(2)}'),
+            Text('Available Seats: ${bus.availableSeats}'),
           ],
         ),
+        trailing: const Icon(Icons.arrow_forward),
+        onTap: () {
+          // Navigate to bus details screen or booking screen
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => BusDetailsScreen(bus: bus)));
+        },
       ),
     );
   }
 }
-
-// Model class for Ticket
-class Ticket {
-  final String ticketNumber;
-  final String destination;
-  final String date;
-  final String time;
-  final TicketStatus status;
-
-  Ticket({
-    required this.ticketNumber,
-    required this.destination,
-    required this.date,
-    required this.time,
-    required this.status,
-  });
-
-  String statusToString() {
-    switch (status) {
-      case TicketStatus.confirmed:
-        return 'Confirmed';
-      case TicketStatus.pending:
-        return 'Pending';
-      case TicketStatus.cancelled:
-        return 'Cancelled';
-    }
-  }
-}
-
-// Model class for Trip
-class Trip {
-  final String destination_terminal;
-  final String departure_terminal;
-  final String date;
-  final String departure_time;
-
-  Trip({
-    required this.destination_terminal,
-    required this.departure_terminal,
-    required this.date,
-    required this.departure_time,
-  });
-}
-
-// Enum for Ticket Status
-enum TicketStatus { confirmed, pending, cancelled }

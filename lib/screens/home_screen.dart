@@ -405,45 +405,45 @@ class _HomeContentState extends State<HomeContent> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Exclusive Offers',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto',
-              ),
-            ),
-            Card(
-              color: Colors.redAccent.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.local_offer, color: Colors.redAccent),
-                      title: Text('50% off on your first trip!'),
-                      subtitle: Text('Use code: FIRST50'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        // Navigate to offer details
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.local_offer, color: Colors.redAccent),
-                      title:
-                          Text('50% off luggage price weighing 2kg and below'),
-                      subtitle: Text('Valid till: 31st May, 2024'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        // Navigate to offer details
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(height: 20),
+            // Text(
+            //   'Exclusive Offers',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     fontFamily: 'Roboto',
+            //   ),
+            // ),
+            // Card(
+            //   color: Colors.redAccent.withOpacity(0.1),
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(16.0),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         ListTile(
+            //           leading: Icon(Icons.local_offer, color: Colors.redAccent),
+            //           title: Text('50% off on your first trip!'),
+            //           subtitle: Text('Use code: FIRST50'),
+            //           trailing: Icon(Icons.arrow_forward_ios),
+            //           onTap: () {
+            //             // Navigate to offer details
+            //           },
+            //         ),
+            //         ListTile(
+            //           leading: Icon(Icons.local_offer, color: Colors.redAccent),
+            //           title:
+            //               Text('50% off luggage price weighing 2kg and below'),
+            //           subtitle: Text('Valid till: 31st May, 2024'),
+            //           trailing: Icon(Icons.arrow_forward_ios),
+            //           onTap: () {
+            //             // Navigate to offer details
+            //           },
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 20),
           ],
         ),

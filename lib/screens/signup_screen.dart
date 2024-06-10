@@ -1,215 +1,118 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_bus_ticketing_system/screens/home_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
+import '../services/authentication.dart';
+import '../widgets/button.dart';
+import '../widgets/snackbar.dart';
+import '../widgets/text_field.dart';
 
-class SignupScreen extends StatelessWidget {
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
+class SignupScreen extends StatefulWidget {
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  bool isLoading = false;
 
-  SignupScreen({super.key});
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+  }
+
+  void signupUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String res = await AuthMethod().signupUser(
+        email: emailController.text,
+        password: passwordController.text,
+        name: nameController.text);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } else {
+      showSnackBar(context, res);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-            child: Column(
-              children: [
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/vip_logo_transparent.png',
-                        width: 250,
-                        height: 250,
-                        alignment: Alignment.center,
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        cursorColor: Colors.black,
-                        controller: firstnameController,
-                        decoration: const InputDecoration(
-                          prefixIconColor: Colors.redAccent,
-                          labelText: 'Firstname',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_outline),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, top: 40, bottom: 20),
+                child: SizedBox(
+                  height: height / 2.8,
+                  child: Image.asset('assets/images/vip_logo_transparent.png'),
+                ),
+              ),
+              TextFieldInput(
+                  icon: Icons.person,
+                  textEditingController: nameController,
+                  hintText: 'Enter your name',
+                  textInputType: TextInputType.text),
+              TextFieldInput(
+                  icon: Icons.email,
+                  textEditingController: emailController,
+                  hintText: 'Enter your email',
+                  textInputType: TextInputType.emailAddress),
+              TextFieldInput(
+                icon: Icons.lock,
+                textEditingController: passwordController,
+                hintText: 'Enter your password',
+                textInputType: TextInputType.text,
+                isPass: true,
+              ),
+              MyButtons(onTap: signupUser, text: "Sign Up"),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        cursorColor: Colors.black,
-                        controller: lastnameController,
-                        decoration: const InputDecoration(
-                          prefixIconColor: Colors.redAccent,
-                          labelText: 'Lastname',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_outline),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        cursorColor: Colors.black,
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          prefixIconColor: Colors.redAccent,
-                          labelText: 'Email',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.email_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: passwordController,
-                        cursorColor: Colors.black,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          prefixIconColor: Colors.redAccent,
-                          hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.lock_outline),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: confirmPasswordController,
-                        cursorColor: Colors.black,
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm Password',
-                          prefixIconColor: Colors.redAccent,
-                          hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.lock_outline),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: 350,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ),
-                            );
-                          },
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(10.0),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.redAccent),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                          ),
-                          child: const Text(
-                            'Signup',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Already have an account? ',
-                          style: TextStyle(color: Colors.black),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Login',
-                              style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.w600),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
-                                    ),
-                                  );
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      );
+                    },
+                    child: const Text(
+                      " Login",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
         ),
       ),

@@ -1,15 +1,63 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_bus_ticketing_system/screens/home_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/signup_screen.dart';
+import '../services/authentication.dart';
+import '../widgets/snackbar.dart';
 
-class LoginScreen extends StatelessWidget {
+void main() {
+  runApp(MaterialApp(
+    home: LoginScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
+}
+
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginScreen({super.key});
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String res = await AuthMethod().loginUser(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } else {
+      showSnackBar(context, res);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,11 +205,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: LoginScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
 }

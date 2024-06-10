@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vip_bus_ticketing_system/models/ticket.dart';
 import 'package:vip_bus_ticketing_system/screens/tickets_screen.dart';
 
 class TicketDetailsScreen extends StatefulWidget {
@@ -42,10 +43,10 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 10),
-            Text(
-              'Status: ${widget.ticket.statusToString()}',
-              style: const TextStyle(fontSize: 18),
-            ),
+            // Text(
+            //   'Status: ${widget.ticket.statusToString()}',
+            //   style: const TextStyle(fontSize: 18),
+            // ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
