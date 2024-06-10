@@ -36,6 +36,8 @@ class _FilterOptionsState extends State<FilterOptions> {
           },
         ),
         RangeSlider(
+          activeColor: Colors.red,
+          inactiveColor: Colors.grey,
           values: RangeValues(minPrice, maxPrice),
           min: 0,
           max: 1000,

@@ -7,8 +7,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // Add bus data for testing
-  // final BusService busService = BusService();
-  // busService.addBusData();
+  final BusService busService = BusService();
+  busService.addBusData();
   runApp(const MyApp());
 }
 

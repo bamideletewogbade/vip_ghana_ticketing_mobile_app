@@ -9,6 +9,7 @@ class Bus {
   final int availableSeats;
   final String departureStation;
   final String arrivalStation;
+  final String session;
 
   String get departureDate => departureTime.split(' ')[0];
   String get departureTimeOnly => departureTime.split(' ')[1];
@@ -23,6 +24,7 @@ class Bus {
     required this.availableSeats,
     required this.departureStation,
     required this.arrivalStation,
+    required this.session,
   });
 
   factory Bus.fromFirestore(DocumentSnapshot doc) {
@@ -37,6 +39,7 @@ class Bus {
       availableSeats: data['availableSeats'] ?? 0,
       departureStation: data['departureStation'] ?? '',
       arrivalStation: data['arrivalStation'] ?? '',
+      session: data['session'] ?? '',
     );
   }
 }

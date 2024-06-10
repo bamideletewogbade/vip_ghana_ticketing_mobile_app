@@ -1,62 +1,71 @@
+// ticket_details_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:vip_bus_ticketing_system/models/ticket.dart';
-import 'package:vip_bus_ticketing_system/screens/tickets_screen.dart';
 
-class TicketDetailsScreen extends StatefulWidget {
+class TicketDetailsScreen extends StatelessWidget {
   final Ticket ticket;
 
-  const TicketDetailsScreen({super.key, required this.ticket});
+  TicketDetailsScreen({required this.ticket});
 
-  @override
-  State<TicketDetailsScreen> createState() => _TicketDetailsScreenState();
-}
-
-class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ticket Details'),
+        title: Text('Ticket Details'),
+        backgroundColor: Colors.redAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text(
-              'Ticket Number: ${widget.ticket.ticketNumber}',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'Ticket Number: ${ticket.ticketNumber}',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
+            Text('Destination: ${ticket.destination}'),
+            Text('Date: ${ticket.date}'),
+            Text('Session: ${ticket.session}'),
+            Text('Price: GHS\$${ticket.price}'),
+            Text('Seat Number: ${ticket.seatNumber}'),
             Text(
-              'Destination: ${widget.ticket.destination}',
-              style: const TextStyle(fontSize: 18),
+              'Status: ${_getStatusText(ticket.status)}',
+              style: TextStyle(
+                color: _getStatusColor(ticket.status),
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Date: ${widget.ticket.date}',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Time: ${widget.ticket.time}',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            // Text(
-            //   'Status: ${widget.ticket.statusToString()}',
-            //   style: const TextStyle(fontSize: 18),
-            // ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Implement any action, like cancelling the ticket
-              },
-              child: const Text('Cancel Ticket'),
-            ),
+            // Add any additional UI components like text fields for passenger details, buttons, etc.
           ],
         ),
       ),
     );
+  }
+
+  String _getStatusText(int? status) {
+    switch (status) {
+      case TicketStatus.confirmed:
+        return 'Confirmed';
+      case TicketStatus.pending:
+        return 'Pending';
+      case TicketStatus.cancelled:
+        return 'Cancelled';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  Color _getStatusColor(int? status) {
+    switch (status) {
+      case TicketStatus.confirmed:
+        return Colors.green;
+      case TicketStatus.pending:
+        return Colors.orange;
+      case TicketStatus.cancelled:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

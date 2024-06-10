@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vip_bus_ticketing_system/screens/search_result_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/tickets_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/profile_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/support_screen.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:vip_bus_ticketing_system/services/bus_service.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -108,12 +110,40 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  final String username = 'Ife';
-  final TextEditingController toController = TextEditingController();
-  final TextEditingController fromController = TextEditingController();
+  final BusService _busService = BusService();
+  String username = "";
+
   final TextEditingController dateController = TextEditingController();
   String nearestTerminal = '';
   GoogleMapController? _mapController;
+
+  String selectedFrom = '';
+  String selectedTo = '';
+  String selectedSession = '';
+
+  List<String> locations = [
+    'Accra Terminal',
+    'Kumasi Terminal',
+    'Sunyani Terminal'
+  ];
+  List<String> sessions = [
+    'Morning session (5am - 8am)',
+    'Evening session (4pm - 7pm)'
+  ];
+
+  Future<void> fetchUserName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        username = userDoc['name'];
+      });
+    }
+  }
 
   // List of VIP bus terminals (example data)
   final List<Map<String, dynamic>> terminals = [
@@ -125,6 +155,7 @@ class _HomeContentState extends State<HomeContent> {
   @override
   void initState() {
     super.initState();
+    fetchUserName();
     _getNearestTerminal();
   }
 
@@ -178,35 +209,6 @@ class _HomeContentState extends State<HomeContent> {
     });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.redAccent,
-              onPrimary: Colors.white,
-              surface: Colors.redAccent,
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (selectedDate != null) {
-      setState(() {
-        dateController.text = "${selectedDate.toLocal()}".split(' ')[0];
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -232,12 +234,14 @@ class _HomeContentState extends State<HomeContent> {
                     fontFamily: 'Roboto',
                   ),
                 ),
-                SizedBox(width: 1),
+                SizedBox(
+                  width: 5,
+                ),
                 Text(
                   username,
                   style: TextStyle(
                     fontSize: 24,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     fontFamily: 'Roboto',
                   ),
                 ),
@@ -264,15 +268,26 @@ class _HomeContentState extends State<HomeContent> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    TextField(
-                      cursorColor: Colors.black,
-                      controller: fromController,
+                    DropdownButtonFormField<String>(
+                      value: selectedFrom.isEmpty ? null : selectedFrom,
+                      hint: Text('Select From'),
+                      items: locations.map((location) {
+                        return DropdownMenuItem<String>(
+                          value: location,
+                          child: Text(location),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedFrom = value!;
+                        });
+                      },
                       decoration: const InputDecoration(
-                        prefixIconColor: Colors.redAccent,
-                        labelText: 'From',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.location_on_outlined),
-                        floatingLabelStyle: TextStyle(color: Colors.black),
+                        prefixIcon: Icon(Icons.location_on_outlined,
+                            color: Colors.redAccent),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
@@ -283,15 +298,26 @@ class _HomeContentState extends State<HomeContent> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    TextField(
-                      cursorColor: Colors.black,
-                      controller: toController,
+                    DropdownButtonFormField<String>(
+                      value: selectedTo.isEmpty ? null : selectedTo,
+                      hint: Text('Select To'),
+                      items: locations.map((location) {
+                        return DropdownMenuItem<String>(
+                          value: location,
+                          child: Text(location),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTo = value!;
+                        });
+                      },
                       decoration: const InputDecoration(
-                        prefixIconColor: Colors.redAccent,
-                        labelText: 'To',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.location_on_outlined),
-                        floatingLabelStyle: TextStyle(color: Colors.black),
+                        prefixIcon: Icon(Icons.location_on_outlined,
+                            color: Colors.redAccent),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
@@ -302,15 +328,26 @@ class _HomeContentState extends State<HomeContent> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    TextField(
-                      cursorColor: Colors.black,
-                      controller: dateController,
+                    DropdownButtonFormField<String>(
+                      value: selectedSession.isEmpty ? null : selectedSession,
+                      hint: Text('Select Session'),
+                      items: sessions.map((session) {
+                        return DropdownMenuItem<String>(
+                          value: session,
+                          child: Text(session),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSession = value!;
+                        });
+                      },
                       decoration: const InputDecoration(
-                        prefixIconColor: Colors.redAccent,
-                        labelText: 'Date',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.calendar_today),
-                        floatingLabelStyle: TextStyle(color: Colors.black),
+                        prefixIcon:
+                            Icon(Icons.calendar_today, color: Colors.redAccent),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
@@ -319,8 +356,6 @@ class _HomeContentState extends State<HomeContent> {
                           borderSide: BorderSide(color: Colors.redAccent),
                         ),
                       ),
-                      readOnly: true,
-                      onTap: () => _selectDate(context),
                     ),
                     SizedBox(height: 10),
                     Center(
@@ -329,6 +364,16 @@ class _HomeContentState extends State<HomeContent> {
                         child: ElevatedButton(
                           onPressed: () {
                             // Implement search functionality here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchResultsScreen(
+                                  from: selectedFrom,
+                                  to: selectedTo,
+                                  session: selectedSession,
+                                ),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.redAccent,
@@ -405,46 +450,6 @@ class _HomeContentState extends State<HomeContent> {
                 ),
               ),
             ),
-            // SizedBox(height: 20),
-            // Text(
-            //   'Exclusive Offers',
-            //   style: TextStyle(
-            //     fontSize: 20,
-            //     fontWeight: FontWeight.bold,
-            //     fontFamily: 'Roboto',
-            //   ),
-            // ),
-            // Card(
-            //   color: Colors.redAccent.withOpacity(0.1),
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(16.0),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         ListTile(
-            //           leading: Icon(Icons.local_offer, color: Colors.redAccent),
-            //           title: Text('50% off on your first trip!'),
-            //           subtitle: Text('Use code: FIRST50'),
-            //           trailing: Icon(Icons.arrow_forward_ios),
-            //           onTap: () {
-            //             // Navigate to offer details
-            //           },
-            //         ),
-            //         ListTile(
-            //           leading: Icon(Icons.local_offer, color: Colors.redAccent),
-            //           title:
-            //               Text('50% off luggage price weighing 2kg and below'),
-            //           subtitle: Text('Valid till: 31st May, 2024'),
-            //           trailing: Icon(Icons.arrow_forward_ios),
-            //           onTap: () {
-            //             // Navigate to offer details
-            //           },
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: 20),
           ],
         ),
       ),

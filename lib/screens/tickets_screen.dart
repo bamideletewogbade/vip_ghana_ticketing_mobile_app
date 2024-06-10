@@ -57,7 +57,7 @@ class _TicketsPageState extends State<TicketsScreen> {
             Text('Departure: ${bus.departureTime}'),
             Text('Arrival: ${bus.arrivalTime}'),
             Text('Bus Type: ${bus.busType}'),
-            Text('Price: \$${bus.price.toStringAsFixed(2)}'),
+            Text('Price: \GHS${bus.price.toStringAsFixed(2)}'),
             Text('Available Seats: ${bus.availableSeats}'),
           ],
         ),
