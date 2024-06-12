@@ -42,8 +42,8 @@ class _FilterOptionsState extends State<FilterOptions> {
           min: 0,
           max: 1000,
           divisions: 100,
-          labels: RangeLabels('\$${minPrice.toStringAsFixed(0)}',
-              '\$${maxPrice.toStringAsFixed(0)}'),
+          labels: RangeLabels('GHS${minPrice.toStringAsFixed(0)}',
+              'GHS${maxPrice.toStringAsFixed(0)}'),
           onChanged: (RangeValues values) {
             setState(() {
               minPrice = values.start;

@@ -11,10 +11,12 @@ class Ticket {
     this.price,
     this.seatNumber,
     this.status,
+    this.departure,
   });
 
   String? ticketNumber;
   String? destination;
+  String? departure;
   String? date;
   String? session;
   int? seatNumber;
@@ -30,7 +32,8 @@ class Ticket {
       session: data['session'] ?? '',
       seatNumber: data['seatNumber'] ?? 0,
       price: data['price'] ?? 0,
-      status: data['status'] ?? TicketStatus.pending,
+      status: data['status'] ?? PaymentStatus.pending,
+      departure: data['departure'] ?? '',
     );
   }
 
@@ -43,12 +46,13 @@ class Ticket {
       'seatNumber': seatNumber,
       'price': price,
       'status': status,
+      'departure': departure,
     };
   }
 }
 
-class TicketStatus {
-  static const int confirmed = 0;
+class PaymentStatus {
+  static const int successful = 0;
   static const int pending = 1;
   static const int cancelled = 2;
 }

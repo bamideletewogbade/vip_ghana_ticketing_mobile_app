@@ -32,7 +32,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Container(
-          alignment: Alignment.center,
+          alignment: Alignment.topLeft,
           child: Text(
             'Search',
             style: TextStyle(
@@ -120,23 +120,43 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Bus Details'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Bus Type: ${bus.busType}'),
-              Text('Departure Station: ${bus.departureStation}'),
-              Text('Arrival Station: ${bus.arrivalStation}'),
-              Text('Departure Time: ${bus.departureTime}'),
-              Text('Arrival Time: ${bus.arrivalTime}'),
-              Text('Price: GHS${bus.price}'),
-              Text('Available Seats: ${bus.availableSeats}'),
-            ],
+          title: Center(
+            child: Text(
+              'Bus Details',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Bus Type:', bus.busType),
+                    _buildDetailRow('Departure Station:', bus.departureStation),
+                    _buildDetailRow('Arrival Station:', bus.arrivalStation),
+                    _buildDetailRow('Departure Time:', bus.departureTime),
+                    _buildDetailRow('Arrival Time:', bus.arrivalTime),
+                    _buildDetailRow('Price:', 'GHS${bus.price}'),
+                    _buildDetailRow(
+                        'Available Seats:', '${bus.availableSeats}'),
+                  ],
+                ),
+              ),
+            ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Book Ticket'),
+              child: Text(
+                'Book Ticket',
+                style: TextStyle(color: Colors.redAccent),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.push(
@@ -148,7 +168,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               },
             ),
             TextButton(
-              child: Text('Close'),
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -156,6 +179,27 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

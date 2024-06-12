@@ -412,44 +412,44 @@ class _HomeContentState extends State<HomeContent> {
             SizedBox(height: 20),
             _buildMap(),
             SizedBox(height: 20),
-            SizedBox(height: 20),
-            Text(
-              'Popular Routes',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto',
-              ),
-            ),
-            Card(
-              color: Colors.blueGrey.withOpacity(0.3),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.event, color: Colors.redAccent),
-                      title: Text('Techiman to Accra'),
-                      subtitle: Text('Date: 28th May, 2024'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        // Navigate to trip details
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.event, color: Colors.redAccent),
-                      title: Text('Sunyani to Kumasi'),
-                      subtitle: Text('Date: 30th May, 2024'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        // Navigate to trip details
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(height: 20),
+            // Text(
+            //   'Popular Routes',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     fontFamily: 'Roboto',
+            //   ),
+            // ),
+            // Card(
+            //   color: Colors.blueGrey.withOpacity(0.3),
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(16.0),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         ListTile(
+            //           leading: Icon(Icons.event, color: Colors.redAccent),
+            //           title: Text('Techiman to Accra'),
+            //           subtitle: Text('Date: 28th May, 2024'),
+            //           trailing: Icon(Icons.arrow_forward_ios),
+            //           onTap: () {
+            //             // Navigate to trip details
+            //           },
+            //         ),
+            //         ListTile(
+            //           leading: Icon(Icons.event, color: Colors.redAccent),
+            //           title: Text('Sunyani to Kumasi'),
+            //           subtitle: Text('Date: 30th May, 2024'),
+            //           trailing: Icon(Icons.arrow_forward_ios),
+            //           onTap: () {
+            //             // Navigate to trip details
+            //           },
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
