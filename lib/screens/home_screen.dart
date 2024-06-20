@@ -1,12 +1,14 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vip_bus_ticketing_system/screens/contact_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/search_result_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/tickets_screen.dart';
 import 'package:vip_bus_ticketing_system/screens/profile_screen.dart';
-import 'package:vip_bus_ticketing_system/screens/support_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vip_bus_ticketing_system/services/bus_service.dart';
 
@@ -31,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeContent(),
     TicketsScreen(),
     ProfileScreen(),
-    SupportScreen(),
+    // SupportScreen(),
+    ContactsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -57,19 +60,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'Home',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Roboto',
-            ),
-          ),
-        ),
-        backgroundColor: Colors.redAccent,
-        automaticallyImplyLeading: false,
-      ),
+      // appBar: AppBar(
+      //   title: Center(
+      //     child: Text(
+      //       'Home',
+      //       style: TextStyle(
+      //         color: Colors.white,
+      //         fontFamily: 'Roboto',
+      //       ),
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.redAccent,
+      //   automaticallyImplyLeading: false,
+      // ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -211,49 +214,83 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return Scaffold(
+      backgroundColor: Colors.white24,
+      // appBar: AppBar(
+      //   title: Text(
+      //     'Contact Us',
+      //     style: TextStyle(
+      //       color: Colors.white,
+      //       fontFamily: 'Roboto',
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.redAccent,
+      //   automaticallyImplyLeading: false,
+      // ),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Stack(
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/pp.png'),
-                  backgroundColor: Colors.redAccent,
-                ),
-                SizedBox(width: 15),
-                Text(
-                  'Hi,',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Roboto',
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/kk.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                    // borderRadius: BorderRadius.circular(15.0),
                   ),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  username,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Roboto',
+                Positioned(
+                  left: 16.0,
+                  top: 16.0,
+                  child: Row(
+                    children: [
+                      // CircleAvatar(
+                      //   radius: 30,
+                      //   backgroundImage: AssetImage('assets/images/pp.png'),
+                      //   backgroundColor: Colors.redAccent,
+                      // ),
+                      // SizedBox(width: 15),
+                      // Text(
+                      //   'Hi,',
+                      //   style: TextStyle(
+                      //     fontSize: 24,
+                      //     fontWeight: FontWeight.w400,
+                      //     fontFamily: 'Roboto',
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      // Text(
+                      //   username,
+                      //   style: TextStyle(
+                      //     fontSize: 24,
+                      //     fontWeight: FontWeight.w500,
+                      //     fontFamily: 'Roboto',
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
+                    ],
                   ),
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Text(
-              'Plan Your Trip',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto',
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Plan Your Trip',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -286,13 +323,16 @@ class _HomeContentState extends State<HomeContent> {
                         prefixIcon: Icon(Icons.location_on_outlined,
                             color: Colors.redAccent),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.redAccent),
                         ),
                       ),
@@ -316,13 +356,16 @@ class _HomeContentState extends State<HomeContent> {
                         prefixIcon: Icon(Icons.location_on_outlined,
                             color: Colors.redAccent),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.redAccent),
                         ),
                       ),
@@ -343,16 +386,19 @@ class _HomeContentState extends State<HomeContent> {
                         });
                       },
                       decoration: const InputDecoration(
-                        prefixIcon:
-                            Icon(Icons.calendar_today, color: Colors.redAccent),
+                        prefixIcon: Icon(Icons.calendar_today,
+                            color: Colors.redAccent),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.redAccent),
                         ),
                       ),
@@ -400,19 +446,22 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              nearestTerminal,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Roboto',
-                color: Colors.redAccent,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                nearestTerminal,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Roboto',
+                  color: Colors.redAccent,
+                ),
               ),
             ),
             SizedBox(height: 20),
             _buildMap(),
             SizedBox(height: 20),
-            // SizedBox(height: 20),
+            // Uncomment and implement the Popular Routes section if needed
             // Text(
             //   'Popular Routes',
             //   style: TextStyle(

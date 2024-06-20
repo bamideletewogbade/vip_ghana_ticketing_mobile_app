@@ -14,7 +14,7 @@ dependencies:
   geocoding: ^2.0.0
   google_maps_flutter: ^2.0.10
   permission_handler: ^10.2.0
-  http: 1.1.0
+  http: ^1.1.0
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   cupertino_icons: ^1.0.2
@@ -25,6 +25,7 @@ dependencies:
   firebase_database: ^10.2.0
   scoped_model: ^2.0.0
   connectivity_plus: ^2.3.2
+  pay_with_paystack : ^1.0.4
  
 
 
@@ -47,6 +48,10 @@ flutter:
     - assets/images/google.png
     - assets/images/pp.png
     - assets/images/44.jpg
+    - assets/images/use.jpg
+    - assets/images/kk.jpg
+    - assets/images/red.jpg
+    - assets/images/images.png
   
 
   fonts:

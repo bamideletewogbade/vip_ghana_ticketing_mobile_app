@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously, prefer_const_constructors_in_immutables
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_bus_ticketing_system/screens/home_screen.dart';
+import 'package:vip_bus_ticketing_system/screens/admin_home_screen.dart'; 
 import 'package:vip_bus_ticketing_system/screens/signup_screen.dart';
 import '../services/authentication.dart';
 import '../widgets/snackbar.dart';
@@ -26,36 +27,53 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
+  final AuthMethod _authMethod = AuthMethod();
 
   @override
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
-  void loginUser() async {
+  void _login() async {
     setState(() {
       isLoading = true;
     });
 
-    String res = await AuthMethod().loginUser(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+    String email = emailController.text.trim().toLowerCase();
+    String isAdmin = 'admin@vip.com'; 
 
     setState(() {
       isLoading = false;
     });
 
-    if (res == "success") {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+    if (email.isNotEmpty && passwordController.text.isNotEmpty) {
+      try {
+        if (email == isAdmin) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminHomeScreen()), // Navigate to AdminHomeScreen for admin
+          );
+        } else {
+          var loginResult = await _authMethod.loginUser(
+            email: email,
+            password: passwordController.text,
+          );
+          if (loginResult == "success") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to HomeScreen for regular user
+            );
+          } else {
+            showSnackBar(context, loginResult); // Show error message if login fails
+          }
+        }
+      } catch (e) {
+        showSnackBar(context, "An error occurred. Please try again."); // Handle generic error
+      }
     } else {
-      showSnackBar(context, res);
+      showSnackBar(context, "Please enter email and password."); // Handle empty fields
     }
   }
 
@@ -131,14 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: _login,
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(5.0),
                     backgroundColor:

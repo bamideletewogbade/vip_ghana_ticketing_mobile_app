@@ -83,6 +83,7 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
               onPressed: () {
                 // Handle the payment logic here
                 _makePayment(mobileNumber);
+                Scaffold();
                 Navigator.of(context).pop();
               },
             ),
@@ -259,25 +260,22 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
                         TextFormField(
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                            labelText: 'Enter number of passengers',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.person_2_outlined),
-                            floatingLabelStyle: TextStyle(color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.redAccent),
-                            ),
+                          labelText: 'Enter number of passengers',
+                          prefixIconColor: Colors.redAccent,
+                          // hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          keyboardType: TextInputType.number,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                          keyboardType: TextInputType.number,  
                           initialValue: _numPassengers.toString(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -295,107 +293,101 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
                         ),
                         SizedBox(height: 10),
                         TextFormField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            hintText: 'Enter your name',
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Colors.redAccent,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.redAccent),
-                            ),
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                          labelText: 'Enter your name',
+                          prefixIconColor: Colors.redAccent,
+                          // hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                          keyboardType: TextInputType.name,  
+                          // initialValue: _numPassengers.toString(),
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter the number of passengers';
+                          //   }
+                          //   if (int.tryParse(value) == null ||
+                          //       int.parse(value) <= 0) {
+                          //     return 'Please enter a valid number of passengers';
+                          //   }
+                          //   return null;
+                          // },
+                          // onChanged: (value) {
+                          //   _updateTotalPrice(int.parse(value));
+                          // },
                         ),
                         SizedBox(height: 10),
                         TextFormField(
-                          controller: _phoneController,
-                          decoration: InputDecoration(
-                            labelText: 'Phone number',
-                            hintText: 'Enter your phone number',
-                            prefixIcon: Icon(
-                              Icons.phone,
-                              color: Colors.redAccent,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.redAccent),
-                            ),
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                          labelText: 'Enter your phone number',
+                          prefixIconColor: Colors.redAccent,
+                          // hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                          keyboardType: TextInputType.phone,  
                         ),
                         SizedBox(height: 10),
                         TextFormField(
-                          controller: _nextOfKinNameController,
-                          decoration: InputDecoration(
-                            labelText: 'Next of kin name',
-                            hintText: 'Enter the name of your next of kin',
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Colors.redAccent,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.redAccent),
-                            ),
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                          labelText: 'Name of next of kin',
+                          prefixIconColor: Colors.redAccent,
+                          // hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                          keyboardType: TextInputType.name,      
                         ),
                         SizedBox(height: 10),
                         TextFormField(
-                          controller: _nextOfKinPhoneNumberController,
-                          decoration: InputDecoration(
-                            labelText: 'Next of kin phone number',
-                            hintText: 'Enter your next of kin\'s phone number',
-                            prefixIcon: Icon(
-                              Icons.phone,
-                              color: Colors.redAccent,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.redAccent),
-                            ),
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                          labelText: 'Next of kin phone number',
+                          prefixIconColor: Colors.redAccent,
+                          // hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.redAccent),
+                          ),
+                        ),
+                          keyboardType: TextInputType.phone,  
                         ),
                         SizedBox(height: 20),
                         Text(

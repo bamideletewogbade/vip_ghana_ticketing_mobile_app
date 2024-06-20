@@ -1,31 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:vip_bus_ticketing_system/models/ticket.dart';
 import 'package:vip_bus_ticketing_system/screens/splash_screen.dart';
 import 'package:vip_bus_ticketing_system/services/bus_service.dart';
-import 'package:vip_bus_ticketing_system/services/ticket_service.dart';
+import 'package:http/http.dart' as http;
+
+
 
 void main() async {
+  // PaystackPlugin.initialize(publicKey: 'your-public-key-here');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // Add bus data for testing
   final BusService busService = BusService();
   busService.addBusData();
-  TicketService ticketService = TicketService();
 
-  // Create a sample ticket
-  Ticket sampleTicket = Ticket(
-    ticketNumber: '123456',
-    destination: 'Accra',
-    date: '2024-06-15',
-    session: 'Morning',
-    seatNumber: 12,
-    price: 100,
-    status: PaymentStatus.pending,
-  );
-
-  // Save the sample ticket to Firestore
-  await ticketService.saveTicket(sampleTicket);
   runApp(const MyApp());
 }
 
