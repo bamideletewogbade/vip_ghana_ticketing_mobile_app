@@ -1,12 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:vip_bus_ticketing_system/models/bus.dart';
 import 'package:vip_bus_ticketing_system/models/ticket.dart';
 import 'package:vip_bus_ticketing_system/screens/payment_screen.dart';
-import 'package:vip_bus_ticketing_system/screens/paystack_payment_page.dart';
-import 'package:vip_bus_ticketing_system/models/paystack_config.dart';
 
 
 class BookingTicketScreen extends StatefulWidget {
@@ -76,7 +75,7 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PaymentScreen(totalPrice: _totalPrice),
+                    builder: (context) => PaymentPage(),
                   ),
                 );
               },
