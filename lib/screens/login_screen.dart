@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously, prefer_const_constructors_in_immutables, curly_braces_in_flow_control_structures
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     String email = emailController.text.trim().toLowerCase();
-    String isAdmin = 'admin@vip.com'; 
 
     setState(() {
       isLoading = false;
@@ -50,30 +49,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isNotEmpty && passwordController.text.isNotEmpty) {
       try {
-        if (email == isAdmin) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AdminHomeScreen()), // Navigate to AdminHomeScreen for admin
-          );
-        } else {
-          var loginResult = await _authMethod.loginUser(
-            email: email,
-            password: passwordController.text,
-          );
+              var loginResult = await _authMethod.loginUser(
+              email: email,
+              password: passwordController.text,
+            );
           if (loginResult == "success") {
+            if(emailController.text.startsWith('admin'))
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to HomeScreen for regular user
+              MaterialPageRoute(builder: (context) => AdminHomeScreen()), 
             );
           } else {
-            showSnackBar(context, loginResult); // Show error message if login fails
+            // showSnackBar(context, loginResult);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()), 
+            ); 
           }
-        }
-      } catch (e) {
-        showSnackBar(context, "An error occurred. Please try again."); // Handle generic error
+        } catch (e) {
+        showSnackBar(context, "An error occurred. Please try again."); 
       }
     } else {
-      showSnackBar(context, "Please enter email and password."); // Handle empty fields
+      showSnackBar(context, "Please enter email and password.");
     }
   }
 

@@ -1,10 +1,13 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:vip_bus_ticketing_system/models/bus.dart';
 import 'package:vip_bus_ticketing_system/models/ticket.dart';
+import 'package:vip_bus_ticketing_system/screens/payment_screen.dart';
+import 'package:vip_bus_ticketing_system/screens/paystack_payment_page.dart';
+import 'package:vip_bus_ticketing_system/models/paystack_config.dart';
+
 
 class BookingTicketScreen extends StatefulWidget {
   final Bus bus;
@@ -22,10 +25,8 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _nextOfKinNameController =
-      TextEditingController();
-  final TextEditingController _nextOfKinPhoneNumberController =
-      TextEditingController();
+  final TextEditingController _nextOfKinNameController = TextEditingController();
+  final TextEditingController _nextOfKinPhoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -47,55 +48,6 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
       _numPassengers = numPassengers;
       _totalPrice = widget.bus.price * _numPassengers;
     });
-  }
-
-  void _showPaymentDialog(BuildContext context) {
-    String mobileNumber = '';
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Payment Details'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Enter Mobile Number'),
-                onChanged: (value) {
-                  mobileNumber = value;
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(
-                'Proceed',
-                style: TextStyle(color: Colors.redAccent),
-              ),
-              onPressed: () {
-                // Handle the payment logic here
-                _makePayment(mobileNumber);
-                Scaffold();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _makePayment(String mobileNumber) {
-    // Add your payment logic here
-    // This method will be called when the user clicks on the "Proceed" button
   }
 
   void _showTicketDetailsDialog(
@@ -120,8 +72,13 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
                 style: TextStyle(color: Colors.redAccent),
               ),
               onPressed: () {
-                _showPaymentDialog(context);
                 Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentScreen(totalPrice: _totalPrice),
+                  ),
+                );
               },
             ),
             TextButton(
@@ -169,10 +126,11 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
   }
 
   void _onPayWithMomoPressed() async {
+    print("Pay with Momo button pressed...");
     if (_formKey.currentState!.validate()) {
       if (_numPassengers > widget.bus.availableSeats) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Changed here.')));
+            .showSnackBar(SnackBar(content: Text('Not enough seats available.')));
         return;
       }
 
@@ -258,151 +216,174 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
                         ),
                         SizedBox(height: 8),
                         TextFormField(
-                          cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                          labelText: 'Enter number of passengers',
-                          prefixIconColor: Colors.redAccent,
-                          // hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            labelText: 'Number of Passengers',
+                            prefixIconColor: Colors.redAccent,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.people),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.redAccent),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                          keyboardType: TextInputType.number,  
-                          initialValue: _numPassengers.toString(),
+                          keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the number of passengers';
-                            }
-                            if (int.tryParse(value) == null ||
+                            if (value == null ||
+                                value.isEmpty ||
                                 int.parse(value) <= 0) {
                               return 'Please enter a valid number of passengers';
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            _updateTotalPrice(int.parse(value));
+                            int? numPassengers = int.tryParse(value);
+                            if (numPassengers != null && numPassengers > 0) {
+                              _updateTotalPrice(numPassengers);
+                            }
                           },
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 8),
                         TextFormField(
+                          controller: _nameController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                          labelText: 'Enter your name',
-                          prefixIconColor: Colors.redAccent,
-                          // hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            labelText: 'Full Name',
+                            prefixIconColor: Colors.redAccent,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.person),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.redAccent),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your full name';
+                            }
+                            return null;
+                          },
                         ),
-                          keyboardType: TextInputType.name,  
-                          // initialValue: _numPassengers.toString(),
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter the number of passengers';
-                          //   }
-                          //   if (int.tryParse(value) == null ||
-                          //       int.parse(value) <= 0) {
-                          //     return 'Please enter a valid number of passengers';
-                          //   }
-                          //   return null;
-                          // },
-                          // onChanged: (value) {
-                          //   _updateTotalPrice(int.parse(value));
-                          // },
-                        ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 8),
                         TextFormField(
+                          controller: _phoneController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                          labelText: 'Enter your phone number',
-                          prefixIconColor: Colors.redAccent,
-                          // hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            labelText: 'Phone Number',
+                            prefixIconColor: Colors.redAccent,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.phone),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.redAccent),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            return null;
+                          },
                         ),
-                          keyboardType: TextInputType.phone,  
-                        ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 8),
                         TextFormField(
+                          controller: _nextOfKinNameController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                          labelText: 'Name of next of kin',
-                          prefixIconColor: Colors.redAccent,
-                          // hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            labelText: 'Next of Kin Name',
+                            prefixIconColor: Colors.redAccent,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.person_outline),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.redAccent),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter next of kin name';
+                            }
+                            return null;
+                          },
                         ),
-                          keyboardType: TextInputType.name,      
-                        ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 8),
                         TextFormField(
+                          controller: _nextOfKinPhoneNumberController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                          labelText: 'Next of kin phone number',
-                          prefixIconColor: Colors.redAccent,
-                          // hintText: '*********',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          floatingLabelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            labelText: 'Next of Kin Phone Number',
+                            prefixIconColor: Colors.redAccent,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.phone_outlined),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.redAccent),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter next of kin phone number';
+                            }
+                            return null;
+                          },
                         ),
-                          keyboardType: TextInputType.phone,  
-                        ),
-                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          'Total Price: GHS$_totalPrice',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          'Total Price: GHS${_totalPrice.toStringAsFixed(2)}',
+                          style: TextStyle(fontSize: 18),
                         ),
-                        SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _onPayWithMomoPressed,
-                          child: Text('Pay with Momo'),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
+                        SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.redAccent),
+                            ),
+                            onPressed: () {
+                              print("Proceeding to payment...");
+                              _onPayWithMomoPressed();
+                              print('done');
+                            },
+                            child: Text('Pay with Momo'),
                           ),
                         ),
                       ],
@@ -423,67 +404,32 @@ class _BookingTicketScreenState extends State<BookingTicketScreen> {
       String userPhoneNumber,
       String nextOfKinName,
       String nextOfKinPhoneNumber) {
-    return Card(
-      margin: const EdgeInsets.all(10.0),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Ticket Number: ${ticket.ticketNumber}',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text('Date: ${ticket.date}'),
-            SizedBox(height: 10),
-            Text('Name: $userName'),
-            Text('Phone number: $userPhoneNumber'),
-            Text('Destination Terminal: ${ticket.destination}'),
-            // Text('Departure Terminal: ${ticket.departure}'),
-
-            // Text('Session: ${ticket.session}'),
-            Text('Price: GHS${ticket.price}'),
-            Text('Seat Number: ${ticket.seatNumber}'),
-            // Text(
-            //   'Status: ${_getStatusText(ticket.status)}',
-            //   style: TextStyle(
-            //     color: _getStatusColor(ticket.status),
-            //   ),
-            // ),
-            // SizedBox(height: 10),
-
-            // Text('Next of Kin Name: $nextOfKinName'),
-            // Text('Next of Kin Phone Number: $nextOfKinPhoneNumber'),
-            // Add any additional UI components like text fields for passenger details, buttons, etc.
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Ticket Details',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      ),
+        SizedBox(height: 8),
+        Text('Ticket Number: ${ticket.ticketNumber}'),
+        Text('Destination: ${ticket.destination}'),
+        Text('Date: ${ticket.date}'),
+        Text('Session: ${ticket.session}'),
+        Text('Seat Number: ${ticket.seatNumber}'),
+        Text('Price: GHS${ticket.price}'),
+        Text('Status: ${ticket.status}'),
+        SizedBox(height: 16),
+        Text(
+          'User Details',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text('Full Name: $userName'),
+        Text('Phone Number: $userPhoneNumber'),
+        Text('Next of Kin Name: $nextOfKinName'),
+        Text('Next of Kin Phone Number: $nextOfKinPhoneNumber'),
+      ],
     );
-  }
-
-  String _getStatusText(int? status) {
-    switch (status) {
-      case PaymentStatus.successful:
-        return 'Confirmed';
-      case PaymentStatus.pending:
-        return 'Pending';
-      case PaymentStatus.cancelled:
-        return 'Cancelled';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  Color _getStatusColor(int? status) {
-    switch (status) {
-      case PaymentStatus.successful:
-        return Colors.green;
-      case PaymentStatus.pending:
-        return Colors.orange;
-      case PaymentStatus.cancelled:
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 }
